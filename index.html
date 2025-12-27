@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Arogya-Onco | Unified MVP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#f4f6f9}
+
+/* COMMON */
+.hidden{display:none}
+section{padding:100px 40px}
+button{cursor:pointer}
+input,select{padding:8px;width:100%;margin:5px 0}
+
+/* LOGIN */
+#login{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(to right,#0a3d62,#1e8449)
+}
+.login-box{
+background:#fff;
+padding:30px;
+width:380px;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,.2)
+}
+.login-box h2{text-align:center;color:#0a3d62}
+.role{display:flex;justify-content:space-around;margin:15px 0}
+.login-box button{
+background:#0a3d62;color:#fff;
+border:none;padding:10px;border-radius:6px;width:100%
+}
+
+/* NAVBAR */
+nav{
+position:fixed;top:0;width:100%;
+background:#0a3d62;color:#fff;
+padding:15px 30px;
+display:flex;justify-content:space-between;
+z-index:1000
+}
+nav ul{list-style:none;display:flex;gap:20px}
+nav li{cursor:pointer}
+
+/* DASHBOARD */
+.card{
+background:#fff;padding:20px;border-radius:8px;
+box-shadow:0 2px 6px rgba(0,0,0,.1)
+}
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px
+}
+
+/* PREDICTION */
+.prediction{background:#fff;padding:25px;border-radius:8px}
+.checkbox-group{columns:2}
+.result{margin-top:15px;background:#eef;padding:10px;border-radius:6px}
+
+/* CIVILIAN */
+.green{background:#1e8449}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="login">
+<div class="login-box">
+<h2>Arogya-Onco</h2>
+<p style="text-align:center">Secure login</p>
+
+<div class="role">
+<label><input type="radio" name="role" value="doctor" checked> Doctor</label>
+<label><input type="radio" name="role" value="civilian"> Civilian</label>
+</div>
+
+<input placeholder="Email">
+<input type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+</div>
+</div>
+
+<!-- DOCTOR DASHBOARD -->
+<div id="doctor" class="hidden">
+
+<nav>
+<b>?? Doctor Panel</b>
+<ul>
+<li onclick="scrollTo('docHome')">Dashboard</li>
+<li onclick="scrollTo('prediction')">Prediction</li>
+<li onclick="logout()">Logout</li>
+</ul>
+</nav>
+
+<section id="docHome">
+<h2>Welcome Doctor</h2><br>
+<div class="grid">
+<div class="card">120<br>Patients</div>
+<div class="card">18<br>High Risk</div>
+<div class="card">95<br>Predictions</div>
+<div class="card">12<br>Follow-ups</div>
+</div>
+</section>
+
+<section id="prediction">
+<div class="prediction">
+<h3>Cancer Risk Prediction</h3><br>
+
+Age:
+<input type="number" id="age"><br><br>
+
+<div class="checkbox-group">
+<b>Symptoms</b><br>
+<input type="checkbox" class="s" value="10"> Weight loss<br>
+<input type="checkbox" class="s" value="12"> Lump / swelling<br>
+<input type="checkbox" class="s" value="10"> Persistent cough<br>
+<input type="checkbox" class="s" value="15"> Bleeding<br>
+<input type="checkbox" class="s" value="8"> Fatigue<br>
+<input type="checkbox" class="s" value="10"> Mouth ulcer<br>
+<input type="checkbox" class="s" value="12"> Difficulty swallowing<br>
+<input type="checkbox" class="s" value="10"> Skin change<br><br>
+
+<b>Habits</b><br>
+<input type="checkbox" class="h" value="15"> Smoking<br>
+<input type="checkbox" class="h" value="20"> Tobacco<br>
+<input type="checkbox" class="h" value="10"> Alcohol<br>
+<input type="checkbox" class="h" value="12"> Family history<br>
+<input type="checkbox" class="h" value="10"> Pollution exposure<br>
+<input type="checkbox" class="h" value="8"> Poor diet<br>
+</div><br>
+
+<button onclick="predict()">Predict Risk</button>
+<div id="docResult" class="result"></div>
+</div>
+</section>
+</div>
+
+<!-- CIVILIAN DASHBOARD -->
+<div id="civilian" class="hidden">
+
+<nav class="green">
+<b>?? Civilian Panel</b>
+<ul>
+<li onclick="scrollTo('civHome')">Home</li>
+<li onclick="scrollTo('medicine')">Medicine</li>
+<li onclick="scrollTo('nutrition')">Nutrition</li>
+<li onclick="logout()">Logout</li>
+</ul>
+</nav>
+
+<section id="civHome">
+<h2>Welcome</h2><br>
+<div class="grid">
+<div class="card">Medicine Safety</div>
+<div class="card">Nutrition Support</div>
+<div class="card">Rural Friendly</div>
+</div>
+</section>
+
+<section id="medicine">
+<div class="card">
+<h3>Medicine Originality Checker</h3><br>
+Batch / QR Code:
+<input id="batch"><br><br>
+<button onclick="checkMedicine()">Check</button>
+<div id="medResult" class="result"></div>
+</div>
+</section>
+
+<section id="nutrition">
+<div class="card">
+<h3>Nutrition Provider</h3><br>
+<select id="ctype">
+<option>General</option>
+<option>Oral Cancer</option>
+<option>Breast Cancer</option>
+<option>Lung Cancer</option>
+</select><br><br>
+
+<button onclick="nutrition()">Get Plan</button>
+<div id="nutResult" class="result"></div>
+</div>
+</section>
+</div>
+
+<script>
+/* LOGIN */
+function login(){
+let role=document.querySelector('input[name=role]:checked').value
+document.getElementById("login").style.display="none"
+document.getElementById(role).classList.remove("hidden")
+}
+
+/* LOGOUT */
+function logout(){location.reload()}
+
+/* SCROLL */
+function scrollTo(id){
+document.getElementById(id).scrollIntoView({behavior:"smooth"})
+}
+
+/* PREDICTION */
+function predict(){
+let risk=5
+let age=document.getElementById("age").value
+if(age>40)risk+=15
+if(age>60)risk+=25
+
+document.querySelectorAll(".s:checked").forEach(x=>risk+=+x.value)
+document.querySelectorAll(".h:checked").forEach(x=>risk+=+x.value)
+
+if(risk>100)risk=100
+let level=risk>70?"HIGH RISK":risk>40?"MEDIUM RISK":"LOW RISK"
+
+document.getElementById("docResult").innerHTML=
+`Risk: <b>${risk}%</b><br>Level: <b>${level}</b>`
+}
+
+/* MEDICINE */
+function checkMedicine(){
+let b=document.getElementById("batch").value
+document.getElementById("medResult").innerText=
+b.length>=6?"? Medicine appears genuine":"?? Verify with pharmacist"
+}
+
+/* NUTRITION */
+function nutrition(){
+let t=document.getElementById("ctype").value
+let plans={
+"General":"Balanced diet with fruits, vegetables & protein",
+"Oral Cancer":"Soft foods, avoid spicy & hard items",
+"Breast Cancer":"High fiber, antioxidants, healthy fats",
+"Lung Cancer":"Protein-rich diet & hydration"
+}
+document.getElementById("nutResult").innerText=plans[t]
+}
+</script>
+
+</body>
+</html>
