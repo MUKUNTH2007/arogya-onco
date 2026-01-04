@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arogya-Onco | AI Cancer Risk Platform</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+body{background:#f4f6f9;color:#333}
+
+/* HERO */
+.hero{
+min-height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:40px;
+background:linear-gradient(135deg,#0a3d62,#2a9d8f);
+color:#fff;
+}
+.hero h1{font-size:3.2rem;font-weight:700;margin-bottom:15px}
+.hero p{font-size:1.2rem;max-width:650px;opacity:.9;margin-bottom:35px}
+.hero button{
+padding:16px 36px;
+font-size:1.05rem;
+border:none;
+border-radius:50px;
+background:#f1c40f;
+color:#0a3d62;
+font-weight:bold;
+box-shadow:0 8px 25px rgba(0,0,0,.25);
+}
+.hero button:hover{transform:scale(1.05)}
+
+/* LOGIN MODAL */
+#signupOverlay{
+position:fixed;inset:0;
+background:rgba(0,0,0,.65);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:1000;
+}
+#signupContent{
+background:#fff;
+width:420px;
+padding:45px;
+border-radius:18px;
+text-align:center;
+position:relative;
+animation:pop .4s ease;
+}
+@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+#signupContent h2{color:#0a3d62;margin-bottom:25px}
+.role{
+display:flex;
+gap:20px;
+justify-content:center;
+margin-bottom:25px;
+}
+.role label{
+padding:12px 20px;
+border:2px solid #ddd;
+border-radius:12px;
+cursor:pointer;
+font-weight:bold;
+}
+.role input{margin-right:8px}
+#signupContent input{
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:10px;
+border:1px solid #ccc;
+}
+#signupContent button{
+margin-top:15px;
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+background:#0a3d62;
+color:#fff;
+font-size:16px;
+font-weight:bold;
+}
+.closeBtn{
+position:absolute;
+top:15px;
+right:20px;
+font-size:22px;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<section class="hero">
+<h1>Arogya-Onco</h1>
+<p>AI-powered cancer risk prediction, doctor decision support, medicine safety verification, and rural-friendly nutrition guidance.</p>
+<button onclick="openSignup()">Get Started</button>
+</section>
+
+<div id="signupOverlay">
+<div id="signupContent">
+<span class="closeBtn" onclick="closeSignup()">×</span>
+<h2>Login to Arogya-Onco</h2>
+
+<div class="role">
+<label><input type="radio" name="role" value="doctor" checked> Doctor</label>
+<label><input type="radio" name="role" value="civilian"> Civilian</label>
+</div>
+
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+</div>
+
+<script>
+function openSignup(){signupOverlay.style.display="flex"}
+function closeSignup(){signupOverlay.style.display="none"}
+function login(){
+let role=document.querySelector('input[name=role]:checked').value;
+closeSignup();
+window.open("dashboard.html?role="+role,"_blank");
+}
+</script>
+
+</body>
+</html>
